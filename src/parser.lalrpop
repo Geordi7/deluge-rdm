@@ -7,7 +7,12 @@ pub File: Vec<Call> = {
 };
 
 CallList: Vec<Call> = {
-    <c:Call> ** "," => c,
+    <first:Call> "," <rest:CallList> => {
+        let mut v = vec![first];
+        v.extend(rest);
+        v
+    },
+    <only:Call> => vec![only],
 };
 
 Call: Call = {
@@ -15,10 +20,15 @@ Call: Call = {
 };
 
 ArgList: Vec<Call> = {
-    <c:Call> ** "," => c,
+    <first:Call> "," <rest:ArgList> => {
+        let mut v = vec![first];
+        v.extend(rest);
+        v
+    },
+    <only:Call> => vec![only],
     => vec![],
 };
 
 Ident: String = {
-    r"[a-zA-Z_][a-zA-Z0-9_]*" => match_str.to_string(),
+    <s:r"[a-zA-Z_][a-zA-Z0-9_]*"> => s.to_string(),
 };

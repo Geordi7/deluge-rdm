@@ -40,7 +40,9 @@ async fn main() -> Result<()> {
         .expect("an input file is required unless --lsp is used");
     let source = fs::read_to_string(file)?;
 
-    let program = parser::FileParser::new().parse(&source)?;
+    let program = parser::FileParser::new()
+        .parse(&source)
+        .map_err(|e| anyhow::anyhow!(format!("{e:?}")))?;
 
     if cli.check {
         println!("Syntax OK");
